@@ -1,33 +1,23 @@
-# Use an official Node.js LTS (Long Term Support) image as the base
-FROM node:lts-alpine as builder
+# Base image
+FROM node:16
 
-# Set the working directory inside the container
-WORKDIR /app
+# Create app directory
+WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json to the working directory
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
 
-# Install project dependencies
-RUN npm ci --only=production
+# Install app dependencies
+RUN npm install
 
-# Copy the rest of the application code to the working directory
+
+# Bundle app source
 COPY . .
 
-# Build the NestJS application
+# Creates a "dist" folder with the production build
 RUN npm run build
 
-# Use a minimal lightweight Node.js image as the final base
-FROM node:lts-alpine
+EXPOSE 8080
 
-# Set the working directory inside the container
-WORKDIR /app
-
-# Copy the built application from the previous stage
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-
-# Expose the desired port (replace 3000 with your application's port if different)
-EXPOSE 3000
-
-# Start the NestJS application
-CMD ["node", "./dist/main"]
+# Start the server using the production build
+CMD [ "npm", "run", "start:prod"]
