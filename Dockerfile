@@ -1,12 +1,11 @@
 # Base image
-FROM node:lts-alpine
+FROM node:16
 
 # Create app directory
 WORKDIR /usr/src/app
 
-# Copy package.json and yarn.lock to the working directory
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json yarn.lock ./
-
 
 # Install app dependencies
 RUN yarn install
@@ -16,7 +15,7 @@ RUN yarn install
 COPY . .
 
 # Creates a "dist" folder with the production build
-RUN npm run build
+RUN yarn run build
 
 EXPOSE 8080
 
