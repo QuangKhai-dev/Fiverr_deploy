@@ -10,6 +10,8 @@ COPY package*.json ./
 # Install app dependencies
 RUN yarn install
 
+# Add this line to install the specific version of memfs
+RUN yarn add memfs@3.6.0
 
 # Bundle app source
 COPY . .
