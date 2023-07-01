@@ -1,5 +1,5 @@
 # Base image
-FROM node:16
+FROM node:lts-alpine
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -8,14 +8,14 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install app dependencies
-RUN npm install
+RUN yarn install
 
 
 # Bundle app source
 COPY . .
 
 # Creates a "dist" folder with the production build
-RUN npm run build
+RUN yarn run build
 
 EXPOSE 8080
 
